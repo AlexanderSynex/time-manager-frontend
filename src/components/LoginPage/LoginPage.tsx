@@ -3,20 +3,19 @@ import { IconButton, TextField } from '@mui/material';
 import LoginIcon from '@mui/icons-material/Login';
 import './LoginPage.css'
 import React, { useState } from 'react';
-import { authUser, type UserAuthInfo } from '../../requests/AuthUser';
-import type IAuthInfo from '../../interfaces/UserSchema';
+import { authUser, type UserAuthInfo } from '../../requests/login/AuthUser';
 
-type AuthSetter = {
-    tokenSetter: React.Dispatch<React.SetStateAction<IAuthInfo>>;
+type LoggedInModifier = {
+    stateModifier: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function LoginPage({ tokenSetter }: AuthSetter) {
+export default function LoginPage({ stateModifier }: LoggedInModifier) {
 
     const [passwordNeeded, setPasswordNeeded] = useState<boolean>(true);
 
     const [login, setLogin] = useState<string>();
     const [password, setPassword] = useState<string>('');
-
+    
     return (
         <form>
             <div>
@@ -31,8 +30,11 @@ export default function LoginPage({ tokenSetter }: AuthSetter) {
                             login: login,
                             password: password
                         } as UserAuthInfo).then(response => {
-                            tokenSetter({ token: response?.token });
+                            if (response?.logged) {
+                                stateModifier(response?.logged);
+                            }
                         }).catch(error => {
+                            stateModifier(false);
                             alert("ERROR: " + error);
                         })
                     }

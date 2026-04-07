@@ -2,28 +2,67 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import './App.css'
 import AdminPanel from './components/AdminPanelPage/AdminPanelPage'
 import WorktimePage from './components/WorktimePage/WorktimePage'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import LoginPage from './components/LoginPage/LoginPage'
-import type IAuthInfo from './interfaces/UserSchema'
+import { authUser } from './requests/login/AuthUser'
+import { AppBar, Avatar, Box, CircularProgress, Toolbar, Typography } from '@mui/material'
+import { getUserInfo } from './requests/Info/UserInfo'
+import type UserInfo from './interfaces/UserInfo'
+import UserControls from './components/UserControls/UserControls'
+
+
 function App() {
 
-  const [authInfo, setAuthInfo] = useState<IAuthInfo>({} as IAuthInfo);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [loggedIn, setLoggedIn] = useState<boolean>(false);
+  const [userInfo, setUserInfo] = useState<UserInfo>()
 
-  if (!authInfo.token) {
-    return <LoginPage tokenSetter={setAuthInfo} />
+  useEffect(() => {
+    authUser().then(response => {
+      if (response?.logged) {
+        setLoggedIn(response?.logged);
+      }
+    }).catch(error => console.log(error)).finally(() => setLoading(false))
+  }, []);
+
+
+  useEffect(() => {
+    if (loggedIn) {
+      getUserInfo().then(response => {
+        setUserInfo({ table_id: response?.table_id as string, personal: response?.personal });
+      }).catch(error => console.log(error)).finally()
+    }
+  }, [loggedIn]);
+
+
+  if (loading) {
+    return <CircularProgress />;
   }
 
   return (
-    <div className='wrapper'>
-      <h1>Учет рабочего времени</h1>
-      <BrowserRouter>
-        <Routes>
-          <Route path='/adminpanel' element={<AdminPanel />} />
-          <Route path='/' element={<WorktimePage />} />
-        </Routes>
-      </BrowserRouter>
-    </div>
+    <Box>
+      <AppBar>
+        <Toolbar className='header'>
+          <Typography variant='h5' sx={{ 'flexGrow': 1 }}>
+            Рабочее время
+          </Typography>
+          {loggedIn && userInfo && <UserControls user={userInfo}/>}
+        </Toolbar>
+      </AppBar>
+      <Toolbar />
+      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        {!loggedIn ? <LoginPage stateModifier={setLoggedIn} /> :
+          <BrowserRouter>
+            <Routes>
+              <Route path='/adminpanel' element={<AdminPanel />} />
+              <Route path='/' element={<WorktimePage />} />
+            </Routes>
+          </BrowserRouter>
+        }
+      </Box>
+    </Box>
   )
 }
+
 
 export default App

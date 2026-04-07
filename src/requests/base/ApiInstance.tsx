@@ -6,15 +6,15 @@ const instance = axios.create({
     headers: { 
         'Content-Type': 'application/json'
     },
+    withCredentials: true
 });
 
 export const ServerRequest = async<T,>(url: string, method: any, data?: any): Promise<T> => {
-    console.log("Data: " + JSON.stringify(data))
     try {
         const response: AxiosResponse<T> = await instance({
             method: method,
             url: url,
-            data: JSON.stringify(data)
+            data: JSON.stringify(data),
         });
         return response.data;
     } catch (error) {
