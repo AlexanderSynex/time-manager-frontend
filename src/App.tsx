@@ -5,10 +5,11 @@ import WorktimePage from './pages/WorktimePage/WorktimePage'
 import { useEffect, useState } from 'react'
 import LoginPage from './pages/LoginPage/LoginPage'
 import { authUser } from './requests/login/AuthUser'
-import { AppBar, Avatar, Box, CircularProgress, Toolbar, Typography } from '@mui/material'
+import { AppBar, Box, CircularProgress, Toolbar, Typography } from '@mui/material'
 import { getUserInfo } from './requests/Info/UserInfo'
 import type UserInfo from './interfaces/UserInfo'
-import UserControls from './components/UserControls/UserControls'
+import WatchtimePage from './pages/WatchtimePage/WatchtimePage'
+import UserChip from './components/UserChip/UserChip'
 
 
 function App() {
@@ -16,6 +17,8 @@ function App() {
   const [loading, setLoading] = useState<boolean>(true);
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<UserInfo>()
+
+  const [userState, setUserState] = useState<string>("в разработке");
 
   useEffect(() => {
     authUser().then(response => {
@@ -46,16 +49,17 @@ function App() {
           <Typography variant='h5' sx={{ 'flexGrow': 1 }}>
             Рабочее время
           </Typography>
-          {loggedIn && userInfo && <UserControls user={userInfo}/>}
+          {loggedIn && userInfo && <UserChip user={userInfo} state={userState} />}
         </Toolbar>
       </AppBar>
       <Toolbar />
-      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+      <Box sx={{ height: '100vh', padding: '10px', display: 'flex', flex: 1, alignItems: 'start', justifyContent: 'center' }}>
         {!loggedIn ? <LoginPage stateModifier={setLoggedIn} /> :
           <BrowserRouter>
             <Routes>
-              <Route path='/adminpanel' element={<AdminPanel />} />
               <Route path='/' element={<WorktimePage />} />
+              <Route path='/adminpanel' element={<AdminPanel />} />
+              <Route path='/table' element={<WatchtimePage />} />
             </Routes>
           </BrowserRouter>
         }

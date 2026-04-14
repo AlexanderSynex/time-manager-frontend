@@ -1,4 +1,4 @@
-import { Avatar, Box, Paper, Typography } from "@mui/material";
+import { Avatar, Box, Paper, Stack, Typography } from "@mui/material";
 import type UserInfo from "../../interfaces/UserInfo";
 import { Fragment } from "react";
 
@@ -9,20 +9,20 @@ function createShortName(user: UserInfo): string {
     return `${surname} ${name}. ${patronymic}.`
 }
 
-export default function UserChip({ user }: { user: UserInfo }) {
+export default function UserChip({ user, state }: { user: UserInfo, state?: string | null }) {
     return (
         <Fragment>
             <Paper sx={{ display: "flex", alignItems: "center", paddingInline: 1 }}>
-                <Box sx={{ display: "flex", flexDirection: "column", paddingRight: 1 }}>
-                    <Box>
-                        <Typography>
-                            {createShortName(user)}
-                        </Typography>
-                    </Box>
-                    <Box>
-                        <Typography>{user.table_id}</Typography>
-                    </Box>
-                </Box>
+                <Stack sx={{ display: "flex", flexDirection: "column", paddingRight: 1 }}>
+
+                    <Typography>
+                        {createShortName(user)} (таб. {user.table_id})
+                    </Typography>
+                    
+                    <Typography variant="caption">
+                        {state}
+                    </Typography>
+                </Stack>
                 <Box>
                     <Avatar />
                 </Box>

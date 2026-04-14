@@ -6,10 +6,12 @@ import ScheduleIcon from '@mui/icons-material/TableChart';
 
 export default function UserControls({ user }: { user: UserInfo }) {
     return (
-        <Box sx={{ display: "flex", flexDirection: 'row', alignItems: 'center'}}>
+        <Box sx={{ display: "flex", flexDirection: 'row', alignItems: 'center' }}>
             <Box>
-                <IconButton>
-                    <ScheduleIcon/>
+                <IconButton onClick={() => {
+                    alert("Opening table");
+                }}>
+                    <ScheduleIcon />
                 </IconButton>
             </Box>
             <UserChip user={user} />
