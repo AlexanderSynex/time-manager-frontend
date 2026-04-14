@@ -1,6 +1,6 @@
-import { Avatar, Box, Menu, MenuItem, Paper, Typography } from "@mui/material";
+import { Avatar, Box, Paper, Typography } from "@mui/material";
 import type UserInfo from "../../interfaces/UserInfo";
-import { Fragment, useState, type MouseEvent } from "react";
+import { Fragment } from "react";
 
 function createShortName(user: UserInfo): string {
     const surname: string = user.personal?.surname ?? "Фамилия";
@@ -12,7 +12,7 @@ function createShortName(user: UserInfo): string {
 export default function UserChip({ user }: { user: UserInfo }) {
     return (
         <Fragment>
-            <Paper sx={{ display: "flex", alignItems: "center" }}>
+            <Paper sx={{ display: "flex", alignItems: "center", paddingInline: 1 }}>
                 <Box sx={{ display: "flex", flexDirection: "column", paddingRight: 1 }}>
                     <Box>
                         <Typography>
@@ -20,7 +20,7 @@ export default function UserChip({ user }: { user: UserInfo }) {
                         </Typography>
                     </Box>
                     <Box>
-                        {user.table_id}
+                        <Typography>{user.table_id}</Typography>
                     </Box>
                 </Box>
                 <Box>
