@@ -19,7 +19,7 @@ function App() {
   const [loggedIn, setLoggedIn] = useState<boolean>(false);
   const [userInfo, setUserInfo] = useState<UserInfo>()
 
-  const [userState, setUserState] = useState<string>("в разработке");
+  const [userState, setUserState] = useState<string>("WIP");
 
   const navigate = useNavigate();
   
@@ -35,8 +35,7 @@ function App() {
       }
     }).catch(error => console.log(error)).finally(() => setLoading(false))
   }, []);
-
-
+  
   useEffect(() => {
     if (loggedIn) {
       getUserInfo().then(response => {
